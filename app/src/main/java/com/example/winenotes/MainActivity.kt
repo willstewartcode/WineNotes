@@ -25,7 +25,6 @@ val NOTES = mutableListOf<Note>()
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: MyAdapter
-    private lateinit var sortOrder: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -84,21 +83,51 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    inner class MyViewHolder(val itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
+    private val startForUpdateResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                result : ActivityResult ->
 
-//        init {
-//            itemView.setOnClickListener(this)
-//            itemView.setOnLongClickListener(this)
-//        }
+            if (result.resultCode == Activity.RESULT_OK) {
+                loadNotesByLastModified()
+            }
+        }
+
+    inner class MyViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView),
+        View.OnClickListener, View.OnLongClickListener {
+
+        init {
+            itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
+        }
 
         fun setText(title: String, lastModified : String) {
             itemView.findViewById<TextView>(R.id.note_title_textview).text = title
             itemView.findViewById<TextView>(R.id.note_lastmodified_textview).append(" $lastModified")
         }
+
+        override fun onClick(v: View?) {
+            val intent = Intent(applicationContext, EditNoteActivity::class.java)
+            intent.putExtra(
+                getString(R.string.intent_purpose_update_note),
+                getString(R.string.intent_purpose_update_note)
+            )
+
+            val note = NOTES[adapterPosition]
+            intent.putExtra(
+                getString(R.string.intent_key_note_id),
+                note.id
+            )
+
+            startForUpdateResult.launch(intent)
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            TODO("Not yet implemented")
+        }
     }
 
-    inner class MyAdapter() : RecyclerView.Adapter<MyViewHolder>() {
+    inner class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_view, parent, false)
