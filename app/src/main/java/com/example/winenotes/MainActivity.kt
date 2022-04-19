@@ -9,6 +9,7 @@ import android.view.*
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -123,7 +124,27 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onLongClick(v: View?): Boolean {
-            TODO("Not yet implemented")
+            val note = NOTES[adapterPosition]
+
+            val builder = AlertDialog.Builder(v!!.context)
+                .setTitle("Confirm delete")
+                .setMessage(
+                    "Are you sure you want to delete this note?" +
+                            "\n${note.title} - ${note.notes}"
+                )
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok) {
+                    dialogInterface, whichButton ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        AppDatabase.getDatabase(applicationContext)
+                            .noteDao()
+                            .deleteNote(note)
+                        loadNotesByTitle()
+                    }
+                }
+            builder.show()
+
+            return true
         }
     }
 
