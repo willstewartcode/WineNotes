@@ -20,6 +20,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 val NOTES = mutableListOf<Note>()
 
@@ -157,7 +159,10 @@ class MainActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val note = NOTES[position]
-            holder.setText(note.title, note.lastModified)
+            val dateStr = note.lastModified
+            val date = formatDate(dateStr)
+
+            holder.setText(note.title, date)
         }
 
         override fun getItemCount(): Int {
@@ -200,5 +205,19 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.intent_purpose_add_note)
         )
         startForAddResult.launch(intent)
+    }
+
+    /**
+     * @param dateStr String from database record that holds the date/time the note was last
+     *                  modified
+     * @return formatted date
+     */
+    private fun formatDate(dateStr: String) : String {
+        val parser = SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        parser.timeZone = TimeZone.getTimeZone("UTC")
+        val dateInDB : Date = parser.parse(dateStr)
+        val displayFormat = SimpleDateFormat("h:mm a MM/dd/yyyy")
+        val displayString : String = displayFormat.format(dateInDB)
+        return displayString
     }
 }
