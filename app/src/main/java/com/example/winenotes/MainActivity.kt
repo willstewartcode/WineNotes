@@ -100,42 +100,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private val startForAddResult =
-//        registerForActivityResult(
-//            ActivityResultContracts.StartActivityForResult()
-//        ) {
-//                result : ActivityResult ->
-//            if (result.resultCode == Activity.RESULT_OK) {
-//                val intent = result.data
-//                val noteId = intent!!.getLongExtra(
-//                    getString(R.string.intent_key_person_id),
-//                    -1
-//                )
-//
-//                // gets person out of db
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    val note = AppDatabase.getDatabase(applicationContext)
-//                        .noteDao()
-//                        .getNote(noteId)
-//                    // adds to list
-//                    NOTES.add(note)
-//                    val position = NOTES.indexOf(noteId)
-//
-//                    withContext(Dispatchers.Main) {
-//                        adapter.notifyItemChanged(position)
-//                        binding.notesRecyclerview.scrollToPosition(position)
-//                    }
-//                }
-//            }
-//        }
+    private val startForAddResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result : ActivityResult ->
+
+            if (result.resultCode == Activity.RESULT_OK) {
+
+            }
+        }
 
     private fun addNewNote() {
         val intent = Intent(applicationContext, EditNoteActivity::class.java)
         intent.putExtra(
             getString(R.string.intent_purpose_key),
-            getString(R.string.intent_purpose_update_note)
+            getString(R.string.intent_purpose_add_note)
         )
-//        startForAddResult.launch(intent)
+        startForAddResult.launch(intent)
     }
 
     private fun sortByTitle() {

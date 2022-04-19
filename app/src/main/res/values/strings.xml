@@ -9,4 +9,5 @@
     <string name="intent_purpose_update_note">Update note</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
+    <string name="title_cannot_be_empty">Title cannot be empty</string>
 </resources>
