@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WineNotes">
         <activity
+            android:name=".EditNoteActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addNewNote() {
-        // TODO: Implement add new note function
+
     }
 
     private fun sortByTitle() {
