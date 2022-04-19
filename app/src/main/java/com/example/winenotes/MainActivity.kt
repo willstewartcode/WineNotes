@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
@@ -44,53 +45,56 @@ class MainActivity : AppCompatActivity() {
 
         binding.addNoteImagebutton.setOnClickListener(AddNoteButtonListener())
 
-        sortOrder = getString(R.string.sort_by_title)
-        loadAllNotes(sortOrder)
+        loadNotesByTitle()
     }
 
-    private fun loadAllNotes(sortOrder : String) {
+    private fun loadNotesByTitle() {
         CoroutineScope(Dispatchers.IO).launch {
             val db = AppDatabase.getDatabase(applicationContext)
             val dao = db.noteDao()
-            lateinit var results : List<Note>
+            val results = dao.getNotesByTitle()
 
-            if (sortOrder.equals(R.string.sort_by_title)) {
-                results = dao.getNotesByTitle()
-                withContext(Dispatchers.Main) {
-                    NOTES.clear()
-                    NOTES.addAll(results)
-                    adapter.notifyDataSetChanged()
-                }
-            } else if (sortOrder.equals(R.string.sort_by_last_modified)) {
-                results = dao.getNotesByLastModified()
-                withContext(Dispatchers.Main) {
-                    NOTES.clear()
-                    NOTES.addAll(results)
-                    adapter.notifyDataSetChanged()
-                }
+            withContext(Dispatchers.Main) {
+                NOTES.clear()
+                NOTES.addAll(results)
+                adapter.notifyDataSetChanged()
+            }
+
+            for (note in results) {
+                Log.i("STATUS_MAIN", "read $note")
+            }
+        }
+    }
+
+    private fun loadNotesByLastModified() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val db = AppDatabase.getDatabase(applicationContext)
+            val dao = db.noteDao()
+            val results = dao.getNotesByLastModified()
+
+            withContext(Dispatchers.Main) {
+                NOTES.clear()
+                NOTES.addAll(results)
+                adapter.notifyDataSetChanged()
+            }
+
+            for (note in results) {
+                Log.i("STATUS_MAIN", "read $note")
             }
         }
     }
 
     inner class MyViewHolder(val itemView: View) :
-        RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
+        RecyclerView.ViewHolder(itemView) {
 
-        init {
-            itemView.setOnClickListener(this)
-            itemView.setOnLongClickListener(this)
-        }
+//        init {
+//            itemView.setOnClickListener(this)
+//            itemView.setOnLongClickListener(this)
+//        }
 
         fun setText(title: String, lastModified : String) {
             itemView.findViewById<TextView>(R.id.note_title_textview).text = title
             itemView.findViewById<TextView>(R.id.note_lastmodified_textview).append(" $lastModified")
-        }
-
-        override fun onClick(view: View?) {
-            TODO("Not yet implemented")
-        }
-
-        override fun onLongClick(v: View?): Boolean {
-            TODO("Not yet implemented")
         }
     }
 
@@ -118,8 +122,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.sort_by_title_menuoption -> sortByTitle()
-            R.id.sort_by_last_modified_menuoption -> sortByLastModified()
+            R.id.sort_by_title_menuoption -> loadNotesByTitle()
+            R.id.sort_by_last_modified_menuoption -> loadNotesByLastModified()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -135,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             result : ActivityResult ->
 
             if (result.resultCode == Activity.RESULT_OK) {
-                loadAllNotes(sortOrder)
+                loadNotesByLastModified()
             }
         }
 
@@ -146,15 +150,5 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.intent_purpose_add_note)
         )
         startForAddResult.launch(intent)
-    }
-
-    private fun sortByTitle() {
-        sortOrder = getString(R.string.sort_by_title)
-        loadAllNotes(sortOrder)
-    }
-
-    private fun sortByLastModified() {
-        sortOrder = getString(R.string.sort_by_last_modified)
-        loadAllNotes(sortOrder)
     }
 }
