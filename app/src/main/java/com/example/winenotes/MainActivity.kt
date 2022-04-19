@@ -24,6 +24,7 @@ val NOTES = mutableListOf<Note>()
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: MyAdapter
+    private lateinit var sortOrder: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -43,19 +44,30 @@ class MainActivity : AppCompatActivity() {
 
         binding.addNoteImagebutton.setOnClickListener(AddNoteButtonListener())
 
-        loadAllNotes()
+        sortOrder = getString(R.string.sort_by_title)
+        loadAllNotes(sortOrder)
     }
 
-    private fun loadAllNotes() {
+    private fun loadAllNotes(sortOrder : String) {
         CoroutineScope(Dispatchers.IO).launch {
             val db = AppDatabase.getDatabase(applicationContext)
             val dao = db.noteDao()
-            val results = dao.getNotesByLastModified()
+            lateinit var results : List<Note>
 
-            withContext(Dispatchers.Main) {
-                NOTES.clear()
-                NOTES.addAll(results)
-                adapter.notifyDataSetChanged()
+            if (sortOrder.equals(R.string.sort_by_title)) {
+                results = dao.getNotesByTitle()
+                withContext(Dispatchers.Main) {
+                    NOTES.clear()
+                    NOTES.addAll(results)
+                    adapter.notifyDataSetChanged()
+                }
+            } else if (sortOrder.equals(R.string.sort_by_last_modified)) {
+                results = dao.getNotesByLastModified()
+                withContext(Dispatchers.Main) {
+                    NOTES.clear()
+                    NOTES.addAll(results)
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
     }
@@ -123,7 +135,7 @@ class MainActivity : AppCompatActivity() {
             result : ActivityResult ->
 
             if (result.resultCode == Activity.RESULT_OK) {
-
+                loadAllNotes(sortOrder)
             }
         }
 
@@ -137,10 +149,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sortByTitle() {
-        // TODO: Implement sort by title function
+        sortOrder = getString(R.string.sort_by_title)
+        loadAllNotes(sortOrder)
     }
 
     private fun sortByLastModified() {
-        // TODO: Implement sort by last modified function
+        sortOrder = getString(R.string.sort_by_last_modified)
+        loadAllNotes(sortOrder)
     }
 }

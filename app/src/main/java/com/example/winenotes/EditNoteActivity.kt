@@ -1,5 +1,6 @@
 package com.example.winenotes
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,12 +11,16 @@ import com.example.winenotes.databinding.ActivityEditNoteBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
+
     private var purpose : String? = ""
+    private var noteId : Long = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditNoteBinding.inflate(layoutInflater)
@@ -52,18 +57,25 @@ class EditNoteActivity : AppCompatActivity() {
             val noteDao = AppDatabase.getDatabase(applicationContext)
                 .noteDao()
 
-            var resultId : Long
-
             if (purpose.equals(getString(R.string.intent_purpose_add_note))) {
                 // adds new note to database
                 val note = Note(0, title, noteText, dateString)
-                resultId = noteDao.addNote(note)
-                Log.i("STATUS_NOTE", "Inserted note: $note")
+                noteId = noteDao.addNote(note)
+                Log.i("STATUS_NOTE", "Inserted note: ${note.id}, ${note.title}, ${note.notes}, ${note.lastModified}")
             } else if (purpose.equals(getString(R.string.intent_purpose_update_note))) {
-                TODO("Not implemented")
+
+            }
+
+            val intent = Intent()
+            intent.putExtra(
+                getString(R.string.intent_key_note_id),
+                noteId
+            )
+
+            withContext(Dispatchers.Main) {
+                setResult(RESULT_OK, intent)
+                super.onBackPressed()
             }
         }
-
-        super.onBackPressed()
     }
 }

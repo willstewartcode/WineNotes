@@ -10,4 +10,5 @@
     <string name="title">Title</string>
     <string name="note">Note</string>
     <string name="title_cannot_be_empty">Title cannot be empty</string>
+    <string name="intent_key_note_id">note id</string>
 </resources>
