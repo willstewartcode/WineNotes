@@ -26,6 +26,6 @@ interface NoteDao {
     fun getNotesByTitle() : List<Note>
 
     // Gets all notes, sorted by date last modified
-    @Query("SELECT * FROM note ORDER BY lastModified")
+    @Query("SELECT * FROM note ORDER BY lastModified DESC")
     fun getNotesByLastModified() : List<Note>
 }
