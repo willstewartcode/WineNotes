@@ -42,6 +42,22 @@ class MainActivity : AppCompatActivity() {
         binding.notesRecyclerview.adapter = adapter
 
         binding.addNoteImagebutton.setOnClickListener(AddNoteButtonListener())
+
+        loadAllNotes()
+    }
+
+    private fun loadAllNotes() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val db = AppDatabase.getDatabase(applicationContext)
+            val dao = db.noteDao()
+            val results = dao.getNotesByLastModified()
+
+            withContext(Dispatchers.Main) {
+                NOTES.clear()
+                NOTES.addAll(results)
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 
     inner class MyViewHolder(val itemView: View) :
