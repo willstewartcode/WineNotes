@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.example.winenotes.database.Note
 import com.example.winenotes.databinding.ActivityMainBinding
+
+val NOTES = mutableListOf<Note>()
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
