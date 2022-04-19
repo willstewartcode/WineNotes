@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         override fun onClick(v: View?) {
             val intent = Intent(applicationContext, EditNoteActivity::class.java)
             intent.putExtra(
-                getString(R.string.intent_purpose_update_note),
+                getString(R.string.intent_purpose_key),
                 getString(R.string.intent_purpose_update_note)
             )
 

@@ -82,7 +82,8 @@ class EditNoteActivity : AppCompatActivity() {
                 noteId = noteDao.addNote(note)
                 Log.i("STATUS_NOTE", "Inserted note: ${note.id}, ${note.title}, ${note.notes}, ${note.lastModified}")
             } else if (purpose.equals(getString(R.string.intent_purpose_update_note))) {
-
+                val note = Note(noteId, title, noteText, dateString)
+                noteDao.updateNote(note)
             }
 
             val intent = Intent()
