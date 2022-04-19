@@ -30,7 +30,26 @@ class EditNoteActivity : AppCompatActivity() {
         val intent = getIntent()
         purpose = intent.getStringExtra(getString(R.string.intent_purpose_key))
 
-        setTitle("$purpose")
+        if (purpose.equals(getString(R.string.intent_purpose_update_note))) {
+            noteId = intent.getLongExtra(
+                getString(R.string.intent_key_note_id),
+                -1
+            )
+
+            // gets note from db
+            CoroutineScope(Dispatchers.IO).launch {
+                val note = AppDatabase.getDatabase(applicationContext)
+                    .noteDao()
+                    .getNote(noteId)
+
+                withContext(Dispatchers.Main) {
+                    binding.titleEdittext.setText(note.title)
+                    binding.noteEdittext.setText(note.notes)
+                }
+            }
+        }
+
+        title = "$purpose"
     }
 
     override fun onBackPressed() {
@@ -47,10 +66,10 @@ class EditNoteActivity : AppCompatActivity() {
 
         val noteText : String = binding.noteEdittext.text.toString().trim()
 
-        val now : Date = Date()
+        val now = Date()
         val databaseDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-        databaseDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
-        var dateString : String = databaseDateFormat.format(now)
+        databaseDateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        val dateString : String = databaseDateFormat.format(now)
 
         // inserts input into database
         CoroutineScope(Dispatchers.IO).launch {

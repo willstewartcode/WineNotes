@@ -28,4 +28,8 @@ interface NoteDao {
     // Gets all notes, sorted by date last modified
     @Query("SELECT * FROM note ORDER BY lastModified DESC")
     fun getNotesByLastModified() : List<Note>
+
+    // Gets specified note
+    @Query("SELECT * FROM note WHERE id = :noteId")
+    fun getNote(noteId : Long) : Note
 }
