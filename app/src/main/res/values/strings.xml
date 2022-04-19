@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WineNotes</string>
+    <string name="app_name">Notes</string>
     <string name="sort_by_title">Sort by Title</string>
     <string name="sort_by_last_modified">Sort by Last Modified</string>
     <string name="last_modified">Last modified:</string>
