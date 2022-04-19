@@ -2,12 +2,16 @@ package com.example.winenotes
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.example.winenotes.database.AppDatabase
+import com.example.winenotes.database.Note
 import com.example.winenotes.databinding.ActivityEditNoteBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EditNoteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditNoteBinding
@@ -38,13 +42,23 @@ class EditNoteActivity : AppCompatActivity() {
 
         val noteText : String = binding.noteEdittext.text.toString().trim()
 
+        val now : Date = Date()
+        val databaseDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        databaseDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+        var dateString : String = databaseDateFormat.format(now)
+
         // inserts input into database
         CoroutineScope(Dispatchers.IO).launch {
             val noteDao = AppDatabase.getDatabase(applicationContext)
                 .noteDao()
 
+            var resultId : Long
+
             if (purpose.equals(getString(R.string.intent_purpose_add_note))) {
                 // adds new note to database
+                val note = Note(0, title, noteText, dateString)
+                resultId = noteDao.addNote(note)
+                Log.i("STATUS_NOTE", "Inserted note: $note")
             } else if (purpose.equals(getString(R.string.intent_purpose_update_note))) {
                 TODO("Not implemented")
             }
