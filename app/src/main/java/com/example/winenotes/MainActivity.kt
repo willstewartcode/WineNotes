@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.winenotes.database.Note
@@ -14,13 +15,23 @@ val NOTES = mutableListOf<Note>()
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: MyAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val layoutManager = LinearLayoutManager(this)
+        binding.notesRecyclerview.layoutManager = layoutManager
 
+        val divider = DividerItemDecoration(
+            applicationContext,
+            layoutManager.orientation
+        )
+        binding.notesRecyclerview.addItemDecoration(divider)
+
+        adapter = MyAdapter()
+        binding.notesRecyclerview.adapter = adapter
     }
 
     inner class MyViewHolder(val itemView: View) :
