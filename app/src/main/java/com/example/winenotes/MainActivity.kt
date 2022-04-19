@@ -61,12 +61,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class MyViewHolder(val itemView: View) :
-        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        RecyclerView.ViewHolder(itemView), View.OnClickListener, View.OnLongClickListener {
 
-//        init {
-//            itemView.findViewById<View>(R.layout.item_view)
-//                .setOnClickListener(this)
-//        }
+        init {
+            itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
+        }
 
         fun setText(title: String, lastModified : String) {
             itemView.findViewById<TextView>(R.id.note_title_textview).text = title
@@ -74,9 +74,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onClick(view: View?) {
-            if(view != null) {
+            TODO("Not yet implemented")
+        }
 
-            }
+        override fun onLongClick(v: View?): Boolean {
+            TODO("Not yet implemented")
         }
     }
 
