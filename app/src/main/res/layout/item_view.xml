@@ -21,8 +21,8 @@
         android:id="@+id/note_lastmodified_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/last_modified"
-        app:layout_constraintBottom_toBottomOf="@+id/note_title_textview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/note_title_textview" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/note_title_textview" />
 </androidx.constraintlayout.widget.ConstraintLayout>
