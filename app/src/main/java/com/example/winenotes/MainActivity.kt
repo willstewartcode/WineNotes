@@ -1,15 +1,23 @@
 package com.example.winenotes
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.winenotes.database.AppDatabase
 import com.example.winenotes.database.Note
 import com.example.winenotes.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 val NOTES = mutableListOf<Note>()
 
@@ -92,8 +100,42 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addNewNote() {
+//    private val startForAddResult =
+//        registerForActivityResult(
+//            ActivityResultContracts.StartActivityForResult()
+//        ) {
+//                result : ActivityResult ->
+//            if (result.resultCode == Activity.RESULT_OK) {
+//                val intent = result.data
+//                val noteId = intent!!.getLongExtra(
+//                    getString(R.string.intent_key_person_id),
+//                    -1
+//                )
+//
+//                // gets person out of db
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    val note = AppDatabase.getDatabase(applicationContext)
+//                        .noteDao()
+//                        .getNote(noteId)
+//                    // adds to list
+//                    NOTES.add(note)
+//                    val position = NOTES.indexOf(noteId)
+//
+//                    withContext(Dispatchers.Main) {
+//                        adapter.notifyItemChanged(position)
+//                        binding.notesRecyclerview.scrollToPosition(position)
+//                    }
+//                }
+//            }
+//        }
 
+    private fun addNewNote() {
+        val intent = Intent(applicationContext, EditNoteActivity::class.java)
+        intent.putExtra(
+            getString(R.string.intent_purpose_key),
+            getString(R.string.intent_purpose_update_note)
+        )
+//        startForAddResult.launch(intent)
     }
 
     private fun sortByTitle() {

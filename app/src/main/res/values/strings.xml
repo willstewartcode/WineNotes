@@ -4,4 +4,9 @@
     <string name="sort_by_last_modified">Sort by Last Modified</string>
     <string name="last_modified">Last modified:</string>
     <string name="add_note">Add note</string>
+    <string name="intent_purpose_key">Intent purpose</string>
+    <string name="intent_purpose_add_note">Add note</string>
+    <string name="intent_purpose_update_note">Update note</string>
+    <string name="title">Title</string>
+    <string name="note">Note</string>
 </resources>
