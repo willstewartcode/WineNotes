@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
 
         adapter = MyAdapter()
         binding.notesRecyclerview.adapter = adapter
+
+        binding.addNoteImagebutton.setOnClickListener(AddNoteButtonListener())
     }
 
     inner class MyViewHolder(val itemView: View) :
@@ -82,6 +84,16 @@ class MainActivity : AppCompatActivity() {
             R.id.sort_by_last_modified_menuoption -> sortByLastModified()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    inner class AddNoteButtonListener : View.OnClickListener {
+        override fun onClick(v: View?) {
+            addNewNote()
+        }
+    }
+
+    private fun addNewNote() {
+        // TODO: Implement add new note function
     }
 
     private fun sortByTitle() {
