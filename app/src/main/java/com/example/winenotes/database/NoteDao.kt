@@ -1,8 +1,6 @@
 package com.example.winenotes.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface NoteDao {
@@ -15,6 +13,13 @@ interface NoteDao {
      */
     @Insert
     fun addNote(note : Note) : Long
+
+    // ID cannot be 0
+    @Update
+    fun updateNote(note : Note)
+
+    @Delete
+    fun deleteNote(note : Note)
 
     // Gets all notes, sorted by title
     @Query("SELECT * FROM note ORDER BY title")
